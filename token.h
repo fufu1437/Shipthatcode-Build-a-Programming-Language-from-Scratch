@@ -9,6 +9,7 @@ typedef struct Token {
 	double number;
 	size_t line;
 	LString* v;
+	LString* o_v;
 	size_t cow;
 }Token;
 

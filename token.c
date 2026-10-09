@@ -117,28 +117,34 @@ Token* tokenize(char* code) {
 		}
 		else if(cc == '"') {
 			code++; cow++;
+			LString* o_string = lstring_new();
+			lstring_addChar(o_string, '"');
 			while(cc != '"' && cc != '\n') {
 				if(cc == '\\') {
-					if(peek == 'n') {
+					lstring_addChar(o_string, cc);
+					code++; cow++;
+					if(cc == 'n') {
 						lstring_addChar(buf, '\n');
 					}
-					else if(peek == 'b') {
+					else if(cc == 'b') {
 						lstring_addChar(buf, '\b');
 					}
-					else if(peek == 't') {
+					else if(cc == 't') {
 						lstring_addChar(buf, '\t');
 					}
-					code++; cow++;
+					lstring_addChar(o_string, cc);
 				}
 				else {
 					lstring_addChar(buf, cc);
 				}
-
+				lstring_addChar(o_string, cc);
 				code++; cow++;
 			}
+			lstring_addChar(o_string, '"');
 			tks[index].cow = cow;
 			tks[index].line = line;
 			tks[index].v = buf;
+			tks[index].o_v = o_string;
 			tks[index++].type = TK_STRING;
 			buf = lstring_new();
 		}
@@ -247,7 +253,7 @@ void token_print(Token* tks) {
 			printf("%s %s null\n", token_str(tk.type), tk.v->val);
 		}
 		else if(tk.type == TK_STRING) {
-			printf("STRING \"%s\" %s\n", tk.v->val, tk.v->val);
+			printf("STRING %s %s\n", tk.o_v->val, tk.v->val);
 		}
 		else {
 			printf("%s null\n", token_str(tk.type));
