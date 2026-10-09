@@ -27,7 +27,7 @@ PY_BIN=python3; command -v python3 >/dev/null 2>&1 || PY_BIN=python
 
 compile() {
   case "$LANG_SLUG" in
-    c)        "$CC_BIN" -O2 -o .prog "$ENTRY" ;;
+    c)        "$CC_BIN" -O2 -g -o .prog "$ENTRY" ;;
     cpp)      "$CXX_BIN" -std=c++17 -O2 -o .prog "$ENTRY" ;;
     rust)     rustc -O -o .prog "$ENTRY" ;;
     java)     javac "$ENTRY" ;;
