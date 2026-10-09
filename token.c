@@ -129,6 +129,12 @@ Token* tokenize(char* code) {
 					else if(cc == 'b') {
 						lstring_addChar(buf, '\b');
 					}
+					else if(cc == '\"') {
+						lstring_addChar(buf, '\"');
+					}
+					else if(cc == '\\') {
+						lstring_addChar(buf, '\\');
+					}
 					else if(cc == 't') {
 						lstring_addChar(buf, '\t');
 					}
@@ -136,9 +142,12 @@ Token* tokenize(char* code) {
 				}
 				else {
 					lstring_addChar(buf, cc);
+					lstring_addChar(o_string, cc);
 				}
-				lstring_addChar(o_string, cc);
 				code++; cow++;
+			}
+			if(cc != '"') {
+				fprintf(stderr, "[line %d] Error: Unterminated string.", line);
 			}
 			lstring_addChar(o_string, '"');
 			tks[index].cow = cow;
@@ -181,6 +190,9 @@ Token* tokenize(char* code) {
 			tks[index].number = number;
 			tks[index++].type = TK_NUMBER;
 			buf = lstring_new();
+		}
+		else {
+			fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", line, cc);
 		}
 		code++; cow++;
 	}
